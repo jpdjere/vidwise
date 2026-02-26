@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import click
@@ -110,7 +109,7 @@ def main(
 
         ai_provider = detect_provider(provider)
         if ai_provider:
-            guide_path = generate_guide(
+            generate_guide(
                 ai_provider,
                 frame_paths,
                 transcript_result,

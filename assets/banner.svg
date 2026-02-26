@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" fill="none">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1" />
+      <stop offset="100%" style="stop-color:#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6" />
+      <stop offset="100%" style="stop-color:#a78bfa" />
+    </linearGradient>
+    <linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1" />
+      <stop offset="50%" style="stop-color:#8b5cf6" />
+      <stop offset="100%" style="stop-color:#a78bfa" />
+    </linearGradient>
+  </defs>
+
+  <!-- Centered icon group -->
+  <g transform="translate(290, 30)">
+    <!-- Video frame -->
+    <rect x="0" y="0" width="140" height="140" rx="20" fill="url(#g1)" />
+
+    <!-- Film strip notches -->
+    <rect x="8" y="8" width="12" height="8" rx="2" fill="white" opacity="0.3" />
+    <rect x="28" y="8" width="12" height="8" rx="2" fill="white" opacity="0.3" />
+    <rect x="48" y="8" width="12" height="8" rx="2" fill="white" opacity="0.3" />
+    <rect x="8" y="124" width="12" height="8" rx="2" fill="white" opacity="0.3" />
+    <rect x="28" y="124" width="12" height="8" rx="2" fill="white" opacity="0.3" />
+    <rect x="48" y="124" width="12" height="8" rx="2" fill="white" opacity="0.3" />
+
+    <!-- Play triangle -->
+    <polygon points="52,38 100,70 52,102" fill="white" opacity="0.95" />
+
+    <!-- Eye overlapping the video frame -->
+    <g transform="translate(85, 32)">
+      <path d="M0,38 Q55,-15 110,38 Q55,91 0,38 Z" fill="url(#g2)" />
+      <circle cx="55" cy="38" r="20" fill="white" />
+      <circle cx="55" cy="38" r="10" fill="#4f46e5" />
+      <circle cx="51" cy="33" r="3.5" fill="white" />
+    </g>
+
+    <!-- Subtle sparkle / AI indicator -->
+    <g transform="translate(178, 12)" fill="#a78bfa">
+      <path d="M8,0 L10,6 L16,8 L10,10 L8,16 L6,10 L0,8 L6,6 Z" opacity="0.7" />
+    </g>
+    <g transform="translate(200, 28)" fill="#c4b5fd">
+      <path d="M5,0 L6.2,3.8 L10,5 L6.2,6.2 L5,10 L3.8,6.2 L0,5 L3.8,3.8 Z" opacity="0.5" />
+    </g>
+  </g>
+
+  <!-- Title -->
+  <text x="450" y="230" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="72" font-weight="800" fill="#1e1b4b" letter-spacing="-2">
+    vid<tspan fill="url(#g1)">wise</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="450" y="270" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="21" fill="#6b7280" font-weight="500" letter-spacing="0.3">
+    LLMs can't watch videos. vidwise gives them eyes.
+  </text>
+
+  <!-- Accent line -->
+  <rect x="350" y="285" width="200" height="3" rx="1.5" fill="url(#g3)" opacity="0.4" />
+</svg>

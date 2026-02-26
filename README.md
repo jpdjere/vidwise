@@ -1,12 +1,12 @@
 <p align="center">
-  <h1 align="center">vidwise</h1>
-  <p align="center"><strong>LLMs can't watch videos. vidwise gives them eyes.</strong></p>
+  <img src="assets/banner.svg" alt="vidwise — LLMs can't watch videos. vidwise gives them eyes." width="700">
 </p>
 
 <p align="center">
   <a href="https://pypi.org/project/vidwise/"><img src="https://img.shields.io/pypi/v/vidwise?color=blue" alt="PyPI"></a>
   <a href="https://pypi.org/project/vidwise/"><img src="https://img.shields.io/pypi/pyversions/vidwise" alt="Python"></a>
   <a href="https://github.com/jpdjere/vidwise/blob/main/LICENSE"><img src="https://img.shields.io/github/license/jpdjere/vidwise" alt="License"></a>
+  <a href="https://github.com/jpdjere/vidwise/actions/workflows/ci.yml"><img src="https://github.com/jpdjere/vidwise/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
 ---

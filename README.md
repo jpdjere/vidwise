@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="vidwise — LLMs can't watch videos. vidwise gives them eyes." width="700">
+  <img src="assets/banner.png" alt="vidwise — LLMs can't watch videos. vidwise gives them eyes." width="700">
 </p>
 
 <p align="center">

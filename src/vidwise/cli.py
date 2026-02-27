@@ -121,7 +121,9 @@ def main(
             print(
                 "No AI provider configured. Skipping guide generation.\n"
                 "Set ANTHROPIC_API_KEY or OPENAI_API_KEY to enable it,\n"
-                "or use the Claude Code plugin for free AI-powered guides.\n"
+                "or use the Claude Code plugin for free AI-powered guides (no API key needed):\n"
+                "  /plugin marketplace add jpdjere/vidwise\n"
+                "  /plugin install vidwise@vidwise\n"
             )
 
     # Summary

@@ -10,7 +10,7 @@
       "name": "vidwise",
       "source": "./plugin",
       "description": "Make any video AI-readable. Extract transcripts, frames, and visual guides from videos using Claude Code's native multimodal AI — no API key needed.",
-      "version": "0.2.0"
+      "version": "0.2.2"
     }
   ]
 }

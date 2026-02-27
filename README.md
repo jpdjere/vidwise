@@ -38,7 +38,10 @@ Video ─→ vidwise ─→ Transcript + Key Frames + Visual Guide ─→ LLM Co
 | **Works with any LLM** | Standard markdown + images. Claude, GPT, Gemini, Llama, Mistral — whatever you use. No vendor lock-in. |
 | **Your video stays local** | Whisper and ffmpeg run on your machine. Nothing leaves your computer unless you opt into AI guide generation. |
 | **Smart, not brute-force** | Pixel-difference analysis keeps only frames where the visual content actually changed. Less noise, better LLM understanding. |
+| **Human-readable AND machine-readable** | The output isn't just for LLMs — `guide.md` is a visual walkthrough you can read, share, and bookmark. One command, two audiences. |
 | **One command** | `vidwise recording.mp4` → transcript, key frames, and visual guide in a single portable directory. |
+
+> **Not just for LLMs.** The visual guide vidwise generates is a fully readable document with embedded screenshots — open it in VS Code, Obsidian, or GitHub and you have a skimmable walkthrough of the entire video. Share it with your team, bookmark it for later, or feed it to any LLM. One artifact, two audiences.
 
 ## Quick Start
 

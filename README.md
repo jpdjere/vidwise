@@ -152,13 +152,19 @@ The `guide.md` uses relative image paths — open it in any markdown viewer (VS 
 If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), install vidwise as a plugin for **AI-powered guide generation without needing an API key** — Claude Code's native multimodal AI handles the analysis:
 
 ```bash
-# Install the plugin (coming soon to marketplace)
-# For now, clone and use --plugin-dir:
-claude --plugin-dir /path/to/vidwise/plugin
+# Add the vidwise marketplace and install the plugin
+/plugin marketplace add jpdjere/vidwise
+/plugin install vidwise@vidwise
 
-# Then inside Claude Code:
+# Then use it:
 /vidwise recording.mp4
 /vidwise https://loom.com/share/abc123
+```
+
+For local development or testing, you can also load directly:
+
+```bash
+claude --plugin-dir /path/to/vidwise/plugin
 ```
 
 The plugin runs `vidwise --no-guide` for extraction, then uses Claude Code's built-in vision capabilities to analyze frames in parallel — completely free, no API key needed.

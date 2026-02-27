@@ -29,6 +29,17 @@ Video ─→ vidwise ─→ Transcript + Key Frames + Visual Guide ─→ LLM Co
 | **Learn from a talk** | Turn any conference presentation into searchable, queryable knowledge |
 | **Onboard faster** | Training videos become AI-queryable — new hires get instant answers |
 
+## Why vidwise?
+
+| | |
+|---|---|
+| **See the whole picture** | Most tools only extract audio. vidwise captures both what was *said* and what was *shown* — UI states, error messages, slides, code, diagrams. |
+| **Process once, query forever** | The output is a self-contained artifact. Feed it to any LLM, any number of times, at zero additional cost. No re-uploading, no re-processing. |
+| **Works with any LLM** | Standard markdown + images. Claude, GPT, Gemini, Llama, Mistral — whatever you use. No vendor lock-in. |
+| **Your video stays local** | Whisper and ffmpeg run on your machine. Nothing leaves your computer unless you opt into AI guide generation. |
+| **Smart, not brute-force** | Pixel-difference analysis keeps only frames where the visual content actually changed. Less noise, better LLM understanding. |
+| **One command** | `vidwise recording.mp4` → transcript, key frames, and visual guide in a single portable directory. |
+
 ## Quick Start
 
 ```bash

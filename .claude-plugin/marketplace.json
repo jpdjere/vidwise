@@ -1,0 +1,16 @@
+{
+  "name": "vidwise",
+  "description": "LLMs can't watch videos. vidwise gives them eyes. Extract transcripts, frames, and visual guides from any video.",
+  "owner": {
+    "name": "Juan Pablo Djeredjian",
+    "email": "jpdjeredjian@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "vidwise",
+      "source": "./plugin",
+      "description": "Make any video AI-readable. Extract transcripts, frames, and visual guides from videos using Claude Code's native multimodal AI — no API key needed.",
+      "version": "0.1.0"
+    }
+  ]
+}

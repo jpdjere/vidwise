@@ -33,8 +33,8 @@ vidwise https://youtube.com/watch?v=abc --model small
 vidwise https://loom.com/share/xyz --no-guide
 
 # In Claude Code (no API key needed for guide)
-/vidwise recording.mp4
-/vidwise https://loom.com/share/xyz
+/vidwise:vidwise recording.mp4
+/vidwise:vidwise https://loom.com/share/xyz
 ```
 
 ## Output Structure

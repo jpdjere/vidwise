@@ -157,8 +157,8 @@ If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), instal
 /plugin install vidwise@vidwise
 
 # Then use it:
-/vidwise recording.mp4
-/vidwise https://loom.com/share/abc123
+/vidwise:vidwise recording.mp4
+/vidwise:vidwise https://loom.com/share/abc123
 ```
 
 For local development or testing, you can also load directly:

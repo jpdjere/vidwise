@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "vidwise"
-version = "0.2.0"
+version = "0.2.1"
 description = "LLMs can't watch videos. vidwise gives them eyes."
 readme = "README.md"
 license = "MIT"

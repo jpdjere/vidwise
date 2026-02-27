@@ -29,13 +29,13 @@ classifiers = [
 dependencies = [
     "click>=8.0",
     "openai-whisper>=20231117",
+    "yt-dlp>=2023.0",
+    "anthropic>=0.40",
+    "openai>=1.0",
 ]
 
 [project.optional-dependencies]
-download = ["yt-dlp>=2023.0"]
-claude = ["anthropic>=0.40"]
-openai = ["openai>=1.0"]
-all = ["yt-dlp>=2023.0", "anthropic>=0.40", "openai>=1.0"]
+fast = ["faster-whisper>=1.0"]
 dev = [
     "pytest>=7.0",
     "pytest-cov",

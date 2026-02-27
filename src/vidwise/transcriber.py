@@ -1,4 +1,9 @@
-"""Whisper transcription — local speech-to-text."""
+"""Whisper transcription — local speech-to-text.
+
+Supports two backends:
+- faster-whisper (lighter, ~200MB, 3-4x faster) — used if installed
+- openai-whisper (default, ~2GB, Apple Metal GPU support) — fallback
+"""
 
 from __future__ import annotations
 
@@ -6,19 +11,26 @@ import json
 from pathlib import Path
 
 
+def _use_faster_whisper() -> bool:
+    """Check if faster-whisper is available."""
+    try:
+        import faster_whisper  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
+
 def transcribe(audio_path: Path, output_dir: Path, model_size: str = "medium") -> dict:
     """Run Whisper transcription on an audio file.
 
     Saves .txt, .srt, and .json outputs to output_dir.
-    Returns the Whisper result dict (with 'segments' and 'text').
+    Returns a result dict with 'segments' list and 'text' string.
     """
-    import whisper
-
-    print(f"Loading Whisper model '{model_size}'...")
-    model = whisper.load_model(model_size)
-
-    print("Transcribing audio (this may take a while)...")
-    result = model.transcribe(str(audio_path), language="en")
+    if _use_faster_whisper():
+        result = _transcribe_faster(audio_path, model_size)
+    else:
+        result = _transcribe_openai(audio_path, model_size)
 
     # Save plain text
     txt_path = output_dir / "transcript.txt"
@@ -35,6 +47,46 @@ def transcribe(audio_path: Path, output_dir: Path, model_size: str = "medium") -
     segment_count = len(result.get("segments", []))
     print(f"  Transcription complete: {segment_count} segments")
     return result
+
+
+def _transcribe_openai(audio_path: Path, model_size: str) -> dict:
+    """Transcribe using openai-whisper (PyTorch backend)."""
+    import whisper
+
+    print(f"Loading Whisper model '{model_size}' (openai-whisper)...")
+    model = whisper.load_model(model_size)
+
+    print("Transcribing audio (this may take a while)...")
+    result = model.transcribe(str(audio_path), language="en")
+    return result
+
+
+def _transcribe_faster(audio_path: Path, model_size: str) -> dict:
+    """Transcribe using faster-whisper (CTranslate2 backend)."""
+    from faster_whisper import WhisperModel
+
+    print(f"Loading Whisper model '{model_size}' (faster-whisper)...")
+    model = WhisperModel(model_size, device="auto", compute_type="default")
+
+    print("Transcribing audio (this may take a while)...")
+    segments_iter, info = model.transcribe(str(audio_path), language="en")
+
+    # Convert faster-whisper segments to the same format as openai-whisper
+    segments = []
+    full_text_parts = []
+    for seg in segments_iter:
+        segments.append({
+            "start": seg.start,
+            "end": seg.end,
+            "text": seg.text,
+        })
+        full_text_parts.append(seg.text.strip())
+
+    return {
+        "text": " ".join(full_text_parts),
+        "segments": segments,
+        "language": info.language,
+    }
 
 
 def _format_srt(segments: list[dict]) -> str:

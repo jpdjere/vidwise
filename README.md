@@ -52,13 +52,11 @@ pip install vidwise
 # Process a local video
 vidwise recording.mp4
 
-# Process a YouTube video (requires yt-dlp)
-pip install "vidwise[download]"
+# Process a YouTube video
 vidwise https://youtube.com/watch?v=abc
 
 # With AI-powered visual guide
 export ANTHROPIC_API_KEY=sk-...   # or OPENAI_API_KEY
-pip install "vidwise[claude]"     # or vidwise[openai]
 vidwise recording.mp4 --provider claude
 ```
 
@@ -66,17 +64,8 @@ vidwise recording.mp4 --provider claude
 
 - **Python 3.10+**
 - **ffmpeg** — `brew install ffmpeg` (macOS) or `apt install ffmpeg` (Linux)
-- **yt-dlp** (optional, for URLs) — `brew install yt-dlp`
 
-## Installation Options
-
-| Command | What you get |
-|---------|-------------|
-| `pip install vidwise` | Core: transcript + frames (Whisper runs locally) |
-| `pip install "vidwise[download]"` | + URL support (YouTube, Loom, 1000+ sites via yt-dlp) |
-| `pip install "vidwise[claude]"` | + AI guide generation via Claude API |
-| `pip install "vidwise[openai]"` | + AI guide generation via OpenAI API |
-| `pip install "vidwise[all]"` | Everything |
+> **Lighter install?** `pip install "vidwise[fast]"` uses faster-whisper (~200MB) instead of openai-whisper (~2GB). 3-4x faster transcription, but without Apple Metal GPU support. vidwise auto-detects which backend is installed.
 
 ## Usage
 

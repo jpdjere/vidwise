@@ -29,6 +29,22 @@ Video ─→ vidwise ─→ Transcript + Key Frames + Visual Guide ─→ LLM Co
 | **Learn from a talk** | Turn any conference presentation into searchable, queryable knowledge |
 | **Onboard faster** | Training videos become AI-queryable — new hires get instant answers |
 
+### Use case: Tutorials
+
+> Feed a 5-minute Flask CRUD tutorial → vidwise extracts every step, every code snippet, every Thunder Client response into a structured visual guide.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo_flask.gif" alt="vidwise demo — Flask CRUD API tutorial" width="700">
+</p>
+
+### Use case: Technical videos
+
+> Feed a Fireship "JavaScript in 100 Seconds" video → vidwise captures the rapid-fire diagrams, code demos, and explanations into a browsable guide.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo.gif" alt="vidwise demo — Fireship JavaScript in 100 Seconds" width="700">
+</p>
+
 ## Why vidwise?
 
 | | |

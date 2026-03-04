@@ -21,3 +21,12 @@ env/
 output-*/
 vidwise-output-*/
 TODO.md
+
+# Demo recording artifacts
+demo_output/
+demo_flask/
+demo-*.sh
+demo-*.sh
+demo.tape
+assets/demo_terminal.gif
+assets/demo_flask_terminal.gif

@@ -20,13 +20,15 @@ env/
 *.mov
 output-*/
 vidwise-output-*/
+vidwise-*/
 TODO.md
 
 # Demo recording artifacts
 demo_output/
 demo_flask/
+demo_meeting/
 demo-*.sh
-demo-*.sh
-demo.tape
+demo*.tape
 assets/demo_terminal.gif
 assets/demo_flask_terminal.gif
+assets/demo_meeting_terminal.gif

@@ -45,6 +45,14 @@ Video ─→ vidwise ─→ Transcript + Key Frames + Visual Guide ─→ LLM Co
   <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo.gif" alt="vidwise demo — Fireship JavaScript in 100 Seconds" width="700">
 </p>
 
+### Use case: Meetings
+
+> Feed a recording of a meeting → vidwise extracts the screen-shared content, UI walkthroughs, and discussion points into a structured reference document.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo_meeting.gif" alt="vidwise demo — GitLab Meeting Utils walkthrough" width="700">
+</p>
+
 ## Why vidwise?
 
 | | |

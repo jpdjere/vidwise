@@ -36,7 +36,7 @@ def derive_output_name(source: str) -> str:
     """Derive a short name from a video source (URL or file path)."""
     if source.startswith(("http://", "https://")):
         # Extract something usable from URL
-        from urllib.parse import urlparse, parse_qs
+        from urllib.parse import parse_qs, urlparse
 
         parsed = urlparse(source)
         # YouTube: use video ID
@@ -58,10 +58,10 @@ def derive_output_name(source: str) -> str:
 
 def format_output_dir(source: str, base_dir: Path | None = None) -> Path:
     """Create the output directory path for a given source."""
-    from datetime import date
+    from datetime import datetime
 
     name = derive_output_name(source)
-    dirname = f"vidwise-{name}-{date.today().isoformat()}"
+    dirname = f"vidwise-{name}-{datetime.now().astimezone().date().isoformat()}"
     if base_dir:
         return base_dir / dirname
     return Path.cwd() / dirname

@@ -1,5 +1,5 @@
-from vidwise.utils import timestamp_label, seconds_from_label
 from vidwise.downloader import is_url
+from vidwise.utils import seconds_from_label, timestamp_label
 
 
 def test_timestamp_label_seconds_only():

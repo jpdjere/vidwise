@@ -13,8 +13,8 @@ def compute_frame_difference(frame_a: Path, frame_b: Path) -> float:
     Returns a value between 0.0 (identical) and 1.0 (completely different).
     Uses small thumbnails for fast comparison.
     """
-    from PIL import Image
     import numpy as np
+    from PIL import Image
 
     size = (128, 72)  # Small thumbnail for speed
     img_a = np.array(Image.open(frame_a).convert("RGB").resize(size), dtype=np.float32)

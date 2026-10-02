@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/banner.png" alt="vidwise — LLMs can't watch videos. vidwise gives them eyes." width="700">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/banner.png" alt="vidwise: LLMs can't watch videos. vidwise gives them eyes." width="700">
 </p>
 
 <p align="center">
@@ -9,87 +9,183 @@
   <a href="https://github.com/jpdjere/vidwise/actions/workflows/ci.yml"><img src="https://github.com/jpdjere/vidwise/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
+<p align="center">
+  <b>Turn any video into a markdown guide your LLM can actually use.</b><br>
+  Transcript, key frames, and every line of code, command, and error shown on screen, copied out verbatim.
+</p>
+
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#claude-code-plugin">Claude Code plugin</a> ·
+  <a href="#what-gets-captured">What gets captured</a> ·
+  <a href="#how-it-works">How it works</a>
+</p>
+
 ---
 
-Videos are the biggest blind spot for AI. A 5-minute Loom bug report, a 30-minute tutorial, a conference talk — all completely opaque to your LLM. You either watch the whole thing yourself or lose the knowledge.
+Videos are the biggest blind spot for AI. A 5-minute Loom bug report, a 30-minute coding tutorial, a recorded meeting where someone walked through their code: your LLM can't see any of it. You either rewatch it yourself or the knowledge is lost.
 
-**vidwise** extracts the visual and audio knowledge from any video into structured, LLM-consumable markdown. Feed the output to any LLM and it instantly "understands" the video.
+Transcripts alone don't fix this. The most useful part of a technical video is usually what's **on screen**, not what's said. "So I changed this line here" means nothing without the line.
 
+**vidwise** runs one command and produces a self-contained folder: a timestamped transcript, the frames where something changed, and a guide that pairs them. When code, a terminal, a stack trace, a diagram, or a slide appears on screen, the guide contains **the actual text**, not a description of it.
+
+```bash
+pip install vidwise
+vidwise https://loom.com/share/abc123
 ```
-Video ─→ vidwise ─→ Transcript + Key Frames + Visual Guide ─→ LLM Context
+
+## Described vs. captured
+
+Most video-to-text tools tell you *about* the screen. vidwise copies it.
+
+**What a typical frame description gives you:**
+
+> The presenter shows a Python file with a function that retries failed requests, then runs the tests in the terminal, and one fails.
+
+**What vidwise puts in `guide.md`:**
+
+````markdown
+## Captured Code and Commands
+
+*At 2:14 (`frame_2m14s.png`)*
+```python
+# src/client/retry.py
+def fetch_with_retry(url: str, attempts: int = 3) -> Response:
+    for i in range(attempts):
+        resp = session.get(url, timeout=5)
+        if resp.status_code < 500:
+            return resp
+        time.sleep(2 ** i)
+    raise RetryExhausted(url)
 ```
 
-## What can you do with it?
+*At 2:40 (`frame_2m40s.png`)*
+```bash
+$ pytest tests/test_retry.py -q
+F.
+FAILED tests/test_retry.py::test_gives_up_after_three - AssertionError: expected 3 calls, got 4
+1 failed, 1 passed in 0.12s
+```
+````
 
-| Scenario | What happens |
+*(Illustrative example of the output format.)*
+
+The first version lets an LLM talk about the video. The second lets it **fix the bug**.
+
+## What you can do with it
+
+| Scenario | What you get |
 |----------|-------------|
-| **Debug a Loom bug report** | Feed the output to Claude → it "sees" the bug, the UI state, the error messages |
-| **Absorb a tutorial** | 30-min coding video → structured knowledge your LLM can answer questions about |
-| **Process a meeting** | Extract decisions, action items, and what was on screen |
-| **Learn from a talk** | Turn any conference presentation into searchable, queryable knowledge |
-| **Onboard faster** | Training videos become AI-queryable — new hires get instant answers |
+| **Debug a Loom bug report** | The UI state, the exact error message, and the stack trace, ready to paste into Claude |
+| **Absorb a coding tutorial** | Every command and code snippet in order, so you can follow along without rewatching |
+| **Pick up a recorded meeting** | The code someone shared on screen, with its file path, plus how it changed during the discussion |
+| **Learn from a talk** | Full slide text and diagram labels, searchable and quotable |
+| **Onboard faster** | Training videos become docs a new hire (or their AI assistant) can search |
 
-### Use case: Tutorials
+### Tutorials
 
-> Feed a 5-minute Flask CRUD tutorial → vidwise extracts every step, every code snippet, every Thunder Client response into a structured visual guide.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo_flask.gif" alt="vidwise demo — Flask CRUD API tutorial" width="700">
-</p>
-
-### Use case: Technical videos
-
-> Feed a Fireship "JavaScript in 100 Seconds" video → vidwise captures the rapid-fire diagrams, code demos, and explanations into a browsable guide.
+> A 5-minute Flask CRUD tutorial becomes a step-by-step guide with every code snippet and API response as a copyable code block.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo.gif" alt="vidwise demo — Fireship JavaScript in 100 Seconds" width="700">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo_flask.gif" alt="vidwise demo: Flask CRUD API tutorial" width="700">
 </p>
 
-### Use case: Meetings
+### Fast-paced technical videos
 
-> Feed a recording of a meeting → vidwise extracts the screen-shared content, UI walkthroughs, and discussion points into a structured reference document.
+> Fireship's "JavaScript in 100 Seconds" becomes a browsable guide that keeps up with the rapid-fire diagrams and code.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo_meeting.gif" alt="vidwise demo — GitLab Meeting Utils walkthrough" width="700">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo.gif" alt="vidwise demo: Fireship JavaScript in 100 Seconds" width="700">
 </p>
+
+### Meetings
+
+> A screen-shared meeting becomes a reference document with the code from the editor, the config values, and the discussion points.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/jpdjere/vidwise/main/assets/demo_meeting.gif" alt="vidwise demo: GitLab Meeting Utils walkthrough" width="700">
+</p>
+
+## What gets captured
+
+The frame analysis follows explicit rules for each kind of screen, so the output is consistent from video to video.
+
+| On screen | What ends up in the guide |
+|-----------|---------------------------|
+| **Code editor / IDE** | The whole visible file, verbatim, with the file path from the tab as a first-line comment. Unsaved-change markers, the selection being discussed, and both sides of a diff view. If the file is edited during the video, each version. |
+| **Terminal** | Commands and their output verbatim, including the prompt line and exit status |
+| **Errors, stack traces, logs** | Verbatim and never shortened |
+| **Diagrams and whiteboards** | The structure, every node and edge label, and the direction of each arrow |
+| **Browser / web app** | The URL, visible state, table values, and form field contents |
+| **Slides and documents** | The full visible text |
+| **Chat panels** | Each sender and message |
+
+Two rules keep the guide readable:
+
+- A screen that stays the same for a minute is captured **once**, with the time range it was visible.
+- Text that can't be read clearly is marked `[unreadable]` instead of guessed. A wrong line of code is worse than a missing one.
+
+Every code block is also collected into a **Captured Code and Commands** section at the top of the guide, in the order it appeared. That section is often all an LLM needs.
 
 ## Why vidwise?
 
 | | |
 |---|---|
-| **See the whole picture** | Most tools only extract audio. vidwise captures both what was *said* and what was *shown* — UI states, error messages, slides, code, diagrams. |
-| **Process once, query forever** | The output is a self-contained artifact. Feed it to any LLM, any number of times, at zero additional cost. No re-uploading, no re-processing. |
-| **Works with any LLM** | Standard markdown + images. Claude, GPT, Gemini, Llama, Mistral — whatever you use. No vendor lock-in. |
-| **Your video stays local** | Whisper and ffmpeg run on your machine. Nothing leaves your computer unless you opt into AI guide generation. |
-| **Smart, not brute-force** | Pixel-difference analysis keeps only frames where the visual content actually changed. Less noise, better LLM understanding. |
-| **Human-readable AND machine-readable** | The output isn't just for LLMs — `guide.md` is a visual walkthrough you can read, share, and bookmark. One command, two audiences. |
-| **One command** | `vidwise recording.mp4` → transcript, key frames, and visual guide in a single portable directory. |
+| **Captures what was shown, not just said** | Audio-only tools miss the screen, and the screen is where the code, errors, and UI state live. |
+| **Copies text instead of describing it** | Code, commands, and errors come out as fenced code blocks you can copy and run. |
+| **Process once, use forever** | The output is a plain folder. Feed it to any LLM, any number of times, with no re-uploading and no per-query video cost. |
+| **Works with any LLM** | Markdown and PNGs. Claude, GPT, Gemini, Llama, whatever you use. |
+| **Your video stays local** | Whisper and ffmpeg run on your machine. Nothing leaves it unless you turn on AI guide generation. |
+| **Keeps only frames that matter** | Pixel-difference filtering drops near-duplicate frames, so a 10-minute screen recording yields dozens of frames, not hundreds. |
+| **Readable by people too** | `guide.md` renders in GitHub, VS Code, and Obsidian; `guide.html` opens in any browser. |
 
-> **Not just for LLMs.** The visual guide vidwise generates is a fully readable document with embedded screenshots — open it in VS Code, Obsidian, or GitHub and you have a skimmable walkthrough of the entire video. Share it with your team, bookmark it for later, or feed it to any LLM. One artifact, two audiences.
-
-## Quick Start
+## Quick start
 
 ```bash
 # Install
 pip install vidwise
 
-# Process a local video
+# A local file
 vidwise recording.mp4
 
-# Process a YouTube video
+# A URL (YouTube, Loom, and anything else yt-dlp supports)
 vidwise https://youtube.com/watch?v=abc
 
-# With AI-powered visual guide
+# Generate the AI guide with your own API key
 export ANTHROPIC_API_KEY=sk-...   # or OPENAI_API_KEY
 vidwise recording.mp4 --provider claude
 ```
 
+No API key? Use the [Claude Code plugin](#claude-code-plugin), which generates the guide with Claude Code itself.
+
 ### Prerequisites
 
 - **Python 3.10+**
-- **ffmpeg** — `brew install ffmpeg` (macOS) or `apt install ffmpeg` (Linux)
+- **ffmpeg**: `brew install ffmpeg` (macOS) or `apt install ffmpeg` (Linux)
 
-> **Lighter install?** `pip install "vidwise[fast]"` uses faster-whisper (~200MB) instead of openai-whisper (~2GB). 3-4x faster transcription, but without Apple Metal GPU support. vidwise auto-detects which backend is installed.
+> **Lighter install:** `pip install "vidwise[fast]"` uses faster-whisper (~200MB) instead of openai-whisper (~2GB). Transcription is 3-4x faster, but without Apple Metal GPU support. vidwise detects which one is installed.
+
+## Claude Code plugin
+
+If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), the plugin is the best way to run vidwise. **No API key needed:** Claude Code's own vision does the frame analysis.
+
+```bash
+# Add the marketplace and install the plugin
+/plugin marketplace add jpdjere/vidwise
+/plugin install vidwise@vidwise
+
+# Use it
+/vidwise:vidwise recording.mp4
+/vidwise:vidwise https://loom.com/share/abc123
+```
+
+The plugin runs `vidwise --no-guide` to get the transcript and frames, then splits the video into 30-second segments and runs a dedicated **frame-analyzer** agent on each one in parallel. Each agent follows the [capture rules](#what-gets-captured) above, and the results are assembled into `guide.md`.
+
+To load it from a local clone instead:
+
+```bash
+claude --plugin-dir /path/to/vidwise/plugin
+```
 
 ## Usage
 
@@ -104,24 +200,27 @@ vidwise <source> [options]
 | `--no-guide` | off | Skip AI guide generation |
 | `--provider`, `-p` | `auto` | AI provider: `auto`, `claude`, `openai` |
 | `--frame-interval` | `2` | Seconds between frame captures |
-| `--frame-threshold` | `0.05` | Pixel diff threshold for key frame selection |
+| `--frame-threshold` | `0.05` | Pixel difference needed to keep a frame |
 
 ### Examples
 
 ```bash
-# Fast transcription of a short video
+# Quick transcript of a short clip, no guide
 vidwise demo.mp4 --model tiny --no-guide
 
-# YouTube tutorial with Claude-powered guide
+# YouTube tutorial with a Claude-generated guide
 vidwise https://youtube.com/watch?v=abc --model small --provider claude
 
-# Loom bug report — default settings
+# Loom bug report with default settings
 vidwise https://loom.com/share/abc123def
+
+# Fast-moving code video: sample every second
+vidwise talk.mp4 --frame-interval 1
 ```
 
 ## Output
 
-vidwise creates a single self-contained directory:
+One self-contained folder:
 
 ```
 vidwise-abc123-2026-02-26/
@@ -130,22 +229,22 @@ vidwise-abc123-2026-02-26/
 ├── transcript.txt         # Plain text transcript
 ├── transcript.srt         # Timestamped subtitles
 ├── transcript.json        # Full Whisper output with segments
-├── frames/                # Key frames every 2 seconds
+├── frames/                # One frame every 2 seconds, named by timestamp
 │   ├── frame_0m00s.png
 │   ├── frame_0m02s.png
-│   ├── frame_0m04s.png
 │   └── ...
-└── guide.md               # Visual guide with embedded frames (if AI enabled)
+├── guide.md               # The guide: overview, captured code, step-by-step sections
+└── guide.html             # The same guide as a dark-themed web page
 ```
 
-The `guide.md` uses relative image paths — open it in any markdown viewer (VS Code, GitHub, Obsidian) and the images render inline.
+`guide.md` uses relative image paths, so the frames render inline in any markdown viewer. To give an LLM the whole video, give it `guide.md`.
 
-## How It Works
+## How it works
 
 ```
-┌─────────────┐
+┌──────────────┐
 │  Video URL   │──→ yt-dlp download
-│  or local    │
+│  or file     │
 └──────┬───────┘
        │
        ▼
@@ -153,76 +252,60 @@ The `guide.md` uses relative image paths — open it in any markdown viewer (VS 
 │   ffmpeg     │────→│  audio.wav       │──→ Whisper ──→ transcript.*
 │  (parallel)  │     │  (16kHz mono)    │
 │              │────→│  frames/         │──→ Key frame selection
-│              │     │  (every 2 sec)   │    (pixel diff filtering)
+│              │     │  (every 2 sec)   │    (pixel difference filter)
 └──────────────┘     └──────────────────┘
                               │
                               ▼
                      ┌──────────────────┐
-                     │  AI Analysis     │  Claude API, OpenAI API,
-                     │  (optional)      │  or Claude Code (free)
+                     │  Frame analysis  │  Per-segment, in parallel:
+                     │  (optional)      │  describe the screen and copy
+                     │                  │  its text verbatim
                      └────────┬─────────┘
-                              │
+                              │  Claude API, OpenAI API,
+                              │  or Claude Code (no key)
                               ▼
                      ┌──────────────────┐
-                     │   guide.md       │  Structured markdown with
-                     │                  │  embedded frame images
+                     │  guide.md        │  Overview, captured code,
+                     │  guide.html      │  step-by-step with frames
                      └──────────────────┘
 ```
 
-**Smart frame selection:** Not every frame matters. vidwise compares consecutive frames using pixel-difference analysis and only keeps frames where the visual content actually changed. A 10-minute video might have 300 raw frames but only ~40 meaningful ones.
+**Key frame selection.** vidwise compares consecutive frames and keeps only the ones where the picture actually changed. A 10-minute video has 300 raw frames but usually only about 40 that matter.
 
-## Claude Code Plugin
+**Segment analysis.** Key frames are grouped with the transcript lines spoken at the same time. A vision model looks at each group, describes what changed, and copies out any readable text according to the capture rules.
 
-If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), install vidwise as a plugin for **AI-powered guide generation without needing an API key** — Claude Code's native multimodal AI handles the analysis:
+**Guide assembly.** The segments are stitched into one document. All captured code is gathered at the top, and the step-by-step sections follow, each with its frames, narration, and the code shown during that step.
 
-```bash
-# Add the vidwise marketplace and install the plugin
-/plugin marketplace add jpdjere/vidwise
-/plugin install vidwise@vidwise
+## Whisper model sizes
 
-# Then use it:
-/vidwise:vidwise recording.mp4
-/vidwise:vidwise https://loom.com/share/abc123
-```
+Measured on an Apple Silicon Mac, CPU only:
 
-For local development or testing, you can also load directly:
+| Model | 1 hour of audio takes | Quality |
+|-------|-----------------------|---------|
+| `tiny` | ~4 min | Rough. Mangles product names and jargon. Fine for a quick look. |
+| `base` | ~6-10 min (estimated) | Between tiny and small |
+| `small` | ~27 min | Decent. Still trips over acronyms. |
+| `medium` | ~90 min | **Recommended.** Handles technical jargon and overlapping speakers. |
+| `large` | ~2-3 hours (estimated) | Best accuracy |
 
-```bash
-claude --plugin-dir /path/to/vidwise/plugin
-```
-
-The plugin runs `vidwise --no-guide` for extraction, then uses Claude Code's built-in vision capabilities to analyze frames in parallel — completely free, no API key needed.
-
-## Whisper Model Sizes
-
-| Model | Speed | Quality | Best For |
-|-------|-------|---------|----------|
-| `tiny` | ~1 min/min | Basic | Quick tests, long videos |
-| `base` | ~2 min/min | Good | Short videos |
-| `small` | ~4 min/min | Better | Videos >30 min |
-| `medium` | ~8 min/min | Recommended | Default for most content |
-| `large` | ~16 min/min | Best | When accuracy is critical |
-
-*Speed estimates on Apple M-series. First run downloads model weights (one-time).*
+For long videos, `small` is a good trade: the LLM reading the guide can usually work out a garbled acronym from context. The first run with each model downloads its weights once.
 
 ## Contributing
 
-Contributions are welcome! Please open an issue first to discuss what you'd like to change.
+Contributions are welcome. Please open an issue first to discuss what you'd like to change.
 
 ```bash
-# Development setup
 git clone https://github.com/jpdjere/vidwise
 cd vidwise
 python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 
-# Run tests
 pytest
-
-# Lint
 ruff check src/
 ```
+
+If vidwise saved you from rewatching a video, a star helps other people find it.
 
 ## License
 

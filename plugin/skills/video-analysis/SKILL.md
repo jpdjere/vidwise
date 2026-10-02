@@ -50,7 +50,8 @@ vidwise-<name>-<date>/
 │   ├── frame_0m00s.png
 │   ├── frame_0m02s.png
 │   └── ...
-└── guide.md            # Visual guide (if AI provider available)
+├── guide.md            # Visual guide with verbatim code/commands (if AI provider available)
+└── guide.html          # Same guide as a browser-ready page
 ```
 
 ## Whisper Model Sizes

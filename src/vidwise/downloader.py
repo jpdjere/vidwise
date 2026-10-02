@@ -35,7 +35,7 @@ def download_video(source: str, output_dir: Path) -> Path:
     ]
 
     print(f"Downloading video from {source}...")
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(f"Error downloading video:\n{result.stderr}", file=sys.stderr)
         raise SystemExit(1)

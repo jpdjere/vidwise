@@ -28,7 +28,7 @@ def extract_audio(video_path: Path, output_dir: Path) -> Path:
     ]
 
     print("Extracting audio...")
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(f"Error extracting audio:\n{result.stderr}", file=sys.stderr)
         raise SystemExit(1)
@@ -57,7 +57,7 @@ def extract_frames(
     ]
 
     print(f"Extracting frames (every {interval}s)...")
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=False)
     if result.returncode != 0:
         print(f"Error extracting frames:\n{result.stderr}", file=sys.stderr)
         raise SystemExit(1)

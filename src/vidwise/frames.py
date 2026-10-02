@@ -6,7 +6,6 @@ from pathlib import Path
 
 from vidwise.utils import seconds_from_label
 
-
 THUMBNAIL_SIZE = (128, 72)
 
 

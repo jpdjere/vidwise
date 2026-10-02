@@ -32,6 +32,8 @@ dependencies = [
     "yt-dlp>=2023.0",
     "anthropic>=0.40",
     "openai>=1.0",
+    "numpy>=1.24",
+    "pillow>=10.0",
 ]
 
 [project.optional-dependencies]

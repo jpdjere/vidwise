@@ -29,3 +29,26 @@ def test_is_url():
     assert is_url("http://loom.com/share/xyz") is True
     assert is_url("/path/to/video.mp4") is False
     assert is_url("video.mp4") is False
+
+
+def test_whisper_language_auto_means_detect():
+    from vidwise.transcriber import whisper_language
+
+    assert whisper_language("auto") is None
+    assert whisper_language("es") == "es"
+
+
+def test_write_key_frame_index(tmp_path):
+    import json
+
+    from vidwise.frames import write_key_frame_index
+
+    frames = tmp_path / "frames"
+    frames.mkdir()
+    key_frames = [frames / "frame_0m00s.png", frames / "frame_1m30s.png"]
+    index_path = write_key_frame_index(key_frames, tmp_path)
+    assert index_path == tmp_path / "key_frames.json"
+    assert json.loads(index_path.read_text()) == [
+        {"seconds": 0, "path": "frames/frame_0m00s.png"},
+        {"seconds": 90, "path": "frames/frame_1m30s.png"},
+    ]

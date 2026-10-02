@@ -21,16 +21,32 @@ def _use_faster_whisper() -> bool:
         return False
 
 
-def transcribe(audio_path: Path, output_dir: Path, model_size: str = "medium") -> dict:
+def whisper_language(language: str) -> str | None:
+    """Translate the ``--language`` option into Whisper's ``language`` argument.
+
+    ``"auto"`` becomes None, which makes Whisper detect the spoken language.
+    """
+    return None if language == "auto" else language
+
+
+def transcribe(
+    audio_path: Path,
+    output_dir: Path,
+    model_size: str = "medium",
+    language: str = "en",
+    word_timestamps: bool = False,
+) -> dict:
     """Run Whisper transcription on an audio file.
 
     Saves .txt, .srt, and .json outputs to output_dir.
-    Returns a result dict with 'segments' list and 'text' string.
+    Returns a result dict with 'segments' list and 'text' string. With
+    word_timestamps, each segment also has a 'words' list of
+    {'word', 'start', 'end'}.
     """
     if _use_faster_whisper():
-        result = _transcribe_faster(audio_path, model_size)
+        result = _transcribe_faster(audio_path, model_size, language, word_timestamps)
     else:
-        result = _transcribe_openai(audio_path, model_size)
+        result = _transcribe_openai(audio_path, model_size, language, word_timestamps)
 
     # Save plain text
     txt_path = output_dir / "transcript.txt"
@@ -49,7 +65,9 @@ def transcribe(audio_path: Path, output_dir: Path, model_size: str = "medium") -
     return result
 
 
-def _transcribe_openai(audio_path: Path, model_size: str) -> dict:
+def _transcribe_openai(
+    audio_path: Path, model_size: str, language: str, word_timestamps: bool
+) -> dict:
     """Transcribe using openai-whisper (PyTorch backend)."""
     import whisper
 
@@ -57,11 +75,17 @@ def _transcribe_openai(audio_path: Path, model_size: str) -> dict:
     model = whisper.load_model(model_size)
 
     print("Transcribing audio (this may take a while)...")
-    result = model.transcribe(str(audio_path), language="en")
+    result = model.transcribe(
+        str(audio_path),
+        language=whisper_language(language),
+        word_timestamps=word_timestamps,
+    )
     return result
 
 
-def _transcribe_faster(audio_path: Path, model_size: str) -> dict:
+def _transcribe_faster(
+    audio_path: Path, model_size: str, language: str, word_timestamps: bool
+) -> dict:
     """Transcribe using faster-whisper (CTranslate2 backend)."""
     from faster_whisper import WhisperModel
 
@@ -69,17 +93,27 @@ def _transcribe_faster(audio_path: Path, model_size: str) -> dict:
     model = WhisperModel(model_size, device="auto", compute_type="default")
 
     print("Transcribing audio (this may take a while)...")
-    segments_iter, info = model.transcribe(str(audio_path), language="en")
+    segments_iter, info = model.transcribe(
+        str(audio_path),
+        language=whisper_language(language),
+        word_timestamps=word_timestamps,
+    )
 
     # Convert faster-whisper segments to the same format as openai-whisper
     segments = []
     full_text_parts = []
     for seg in segments_iter:
-        segments.append({
+        segment = {
             "start": seg.start,
             "end": seg.end,
             "text": seg.text,
-        })
+        }
+        if word_timestamps and seg.words:
+            segment["words"] = [
+                {"word": word.word, "start": word.start, "end": word.end}
+                for word in seg.words
+            ]
+        segments.append(segment)
         full_text_parts.append(seg.text.strip())
 
     return {

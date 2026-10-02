@@ -38,6 +38,17 @@ from vidwise.utils import check_dependency, format_output_dir
     help="AI provider for guide generation.",
 )
 @click.option(
+    "--language", "-l",
+    default="en",
+    show_default=True,
+    help='Spoken language as a code like "en" or "es", or "auto" to detect it.',
+)
+@click.option(
+    "--word-timestamps",
+    is_flag=True,
+    help="Also record when each word was spoken (in transcript.json).",
+)
+@click.option(
     "--frame-interval",
     type=int,
     default=2,
@@ -58,6 +69,8 @@ def main(
     output_dir: str | None,
     no_guide: bool,
     provider: str,
+    language: str,
+    word_timestamps: bool,
     frame_interval: int,
     frame_threshold: float,
 ) -> None:
@@ -73,6 +86,7 @@ def main(
     """
     from vidwise.downloader import acquire_video, is_url
     from vidwise.extractor import extract_all
+    from vidwise.frames import select_key_frames, write_key_frame_index
     from vidwise.transcriber import transcribe
 
     # Check dependencies
@@ -97,10 +111,19 @@ def main(
 
     # Step 2: Extract audio + frames (parallel)
     audio_path, frame_paths = extract_all(video_path, out, interval=frame_interval)
+    key_frames = select_key_frames(frame_paths, threshold=frame_threshold)
+    write_key_frame_index(key_frames, out)
+    print(f"  Kept {len(key_frames)} key frames (key_frames.json)")
     print()
 
     # Step 3: Transcribe
-    transcript_result = transcribe(audio_path, out, model_size=model)
+    transcript_result = transcribe(
+        audio_path,
+        out,
+        model_size=model,
+        language=language,
+        word_timestamps=word_timestamps,
+    )
     print()
 
     # Step 4: Generate guide (optional)

@@ -55,6 +55,26 @@ def select_key_frames(
     return key_frames
 
 
+def write_key_frame_index(key_frames: list[Path], output_dir: Path) -> Path:
+    """Write key_frames.json: each key frame's time in seconds and its path.
+
+    Paths are relative to output_dir, so the folder can be moved.
+    Returns the path of the written file.
+    """
+    import json
+
+    index = [
+        {
+            "seconds": seconds_from_label(frame.name),
+            "path": str(frame.relative_to(output_dir)),
+        }
+        for frame in key_frames
+    ]
+    index_path = output_dir / "key_frames.json"
+    index_path.write_text(json.dumps(index, indent=2) + "\n")
+    return index_path
+
+
 def batch_frames(key_frames: list[Path], max_per_batch: int = 10) -> list[list[Path]]:
     """Group key frames into batches for efficient API calls.
 

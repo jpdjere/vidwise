@@ -199,6 +199,8 @@ vidwise <source> [options]
 | `--output-dir`, `-o` | auto | Output directory path |
 | `--no-guide` | off | Skip AI guide generation |
 | `--provider`, `-p` | `auto` | AI provider: `auto`, `claude`, `openai` |
+| `--language`, `-l` | `en` | Spoken language (`en`, `es`, ...), or `auto` to detect it. Forcing `en` on another language makes Whisper translate instead of transcribe |
+| `--word-timestamps` | off | Also record when each word was spoken, in `transcript.json` |
 | `--frame-interval` | `2` | Seconds between frame captures |
 | `--frame-threshold` | `0.05` | Pixel difference needed to keep a frame |
 
@@ -216,6 +218,9 @@ vidwise https://loom.com/share/abc123def
 
 # Fast-moving code video: sample every second
 vidwise talk.mp4 --frame-interval 1
+
+# A meeting in Spanish, with word-level timing
+vidwise reunion.mp4 --language auto --word-timestamps
 ```
 
 ## Output
@@ -228,7 +233,8 @@ vidwise-abc123-2026-02-26/
 ├── audio.wav              # Extracted audio (16kHz mono)
 ├── transcript.txt         # Plain text transcript
 ├── transcript.srt         # Timestamped subtitles
-├── transcript.json        # Full Whisper output with segments
+├── transcript.json        # Full Whisper output with segments (and words, with --word-timestamps)
+├── key_frames.json        # The frames where the picture changed, with their times
 ├── frames/                # One frame every 2 seconds, named by timestamp
 │   ├── frame_0m00s.png
 │   ├── frame_0m02s.png

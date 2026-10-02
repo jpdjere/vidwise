@@ -52,3 +52,21 @@ def test_write_key_frame_index(tmp_path):
         {"seconds": 0, "path": "frames/frame_0m00s.png"},
         {"seconds": 90, "path": "frames/frame_1m30s.png"},
     ]
+
+
+def test_select_key_frames_keeps_changes_against_the_last_kept_frame(tmp_path):
+    from PIL import Image
+
+    from vidwise.frames import select_key_frames
+
+    colors = ["white", "white", "black", "black", "white", "gray", "gray"]
+    frames = []
+    for second, color in enumerate(colors):
+        path = tmp_path / f"frame_0m{second:02d}s.png"
+        Image.new("RGB", (64, 36), color).save(path)
+        frames.append(path)
+
+    kept = select_key_frames(frames, threshold=0.05)
+    assert [path.name for path in kept] == [
+        "frame_0m00s.png", "frame_0m02s.png", "frame_0m04s.png", "frame_0m05s.png", "frame_0m06s.png",
+    ]

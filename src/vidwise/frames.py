@@ -7,21 +7,43 @@ from pathlib import Path
 from vidwise.utils import seconds_from_label
 
 
+THUMBNAIL_SIZE = (128, 72)
+
+
+def thumbnail(frame: Path):
+    """Load a frame as a small RGB array, which is all the difference check needs."""
+    import numpy as np
+    from PIL import Image
+
+    with Image.open(frame) as image:
+        small = image.convert("RGB").resize(THUMBNAIL_SIZE)
+    return np.asarray(small, dtype=np.uint8)
+
+
+def thumbnail_difference(thumb_a, thumb_b) -> float:
+    """Normalized pixel difference between two thumbnails: 0.0 (identical) to 1.0."""
+    import numpy as np
+
+    difference = np.abs(thumb_a.astype(np.int16) - thumb_b.astype(np.int16))
+    return float(difference.mean() / 255.0)
+
+
+def thumbnails_in_order(frames: list[Path], batch_size: int = 256):
+    """Yield each frame's thumbnail in order, decoding a batch at a time across threads."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor() as pool:
+        for start in range(0, len(frames), batch_size):
+            yield from pool.map(thumbnail, frames[start : start + batch_size])
+
+
 def compute_frame_difference(frame_a: Path, frame_b: Path) -> float:
     """Compute normalized pixel difference between two frames.
 
     Returns a value between 0.0 (identical) and 1.0 (completely different).
     Uses small thumbnails for fast comparison.
     """
-    import numpy as np
-    from PIL import Image
-
-    size = (128, 72)  # Small thumbnail for speed
-    img_a = np.array(Image.open(frame_a).convert("RGB").resize(size), dtype=np.float32)
-    img_b = np.array(Image.open(frame_b).convert("RGB").resize(size), dtype=np.float32)
-
-    diff = np.abs(img_a - img_b).mean() / 255.0
-    return float(diff)
+    return thumbnail_difference(thumbnail(frame_a), thumbnail(frame_b))
 
 
 def select_key_frames(
@@ -43,11 +65,13 @@ def select_key_frames(
     if len(frame_paths) <= 2:
         return list(frame_paths)
 
+    thumbnails = thumbnails_in_order(frame_paths)
     key_frames = [frame_paths[0]]
-    for frame in frame_paths[1:]:
-        diff = compute_frame_difference(key_frames[-1], frame)
-        if diff > threshold:
+    last_kept = next(thumbnails)
+    for frame, current in zip(frame_paths[1:], thumbnails):
+        if thumbnail_difference(last_kept, current) > threshold:
             key_frames.append(frame)
+            last_kept = current
 
     if frame_paths[-1] not in key_frames:
         key_frames.append(frame_paths[-1])

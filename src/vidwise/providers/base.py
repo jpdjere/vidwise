@@ -27,7 +27,13 @@ class GuideProvider(ABC):
             {
                 "summary": str,
                 "key_frames": [
-                    {"filename": str, "description": str}
+                    {
+                        "filename": str,
+                        "description": str,
+                        "extracted_text": str (optional) — visible text from the frame.
+                            Code/commands should use fenced code blocks (```lang).
+                            UI labels as plain text.
+                    }
                 ],
                 "narrative": str,
             }

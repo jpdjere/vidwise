@@ -12,19 +12,48 @@ SYSTEM_PROMPT = """You are a video analysis expert. You receive frames from a vi
 alongside the transcript text for that segment. Your job is to:
 
 1. Describe what is visible in the key frames (UI, text, navigation, diagrams, people, etc.)
-2. Correlate visual content with the narration/transcript
-3. Identify which frames show meaningful visual changes
+2. **Transcribe all visible text verbatim**: code, terminal commands and output, error messages, \
+file contents, URLs, configuration values, slide text, and any other readable text
+3. Correlate visual content with the narration/transcript
+4. Identify which frames show meaningful visual changes
+
+Readers must be able to copy, run, and edit what was on screen from the guide alone. \
+Never paraphrase or summarize code, commands, or config. Mark unreadable text as [unreadable] \
+instead of guessing.
+
+Capture rules by screen type:
+- Code editors/IDEs: the entire visible buffer verbatim, in a fenced block with a language hint. \
+Put the file path from the tab or breadcrumb as a first-line comment. Note any unsaved/modified \
+marker and the cursor or selection when the narrator points at it. For diff views, mark removed \
+lines with - and added lines with +. If the same file changes across frames, show each state.
+- Terminals: commands and output verbatim in a fenced block, including the prompt line and any \
+exit status.
+- Errors, stack traces, logs: verbatim in a fenced block, never shortened.
+- Diagrams: describe the structure and transcribe every node and edge label; for architecture \
+diagrams, give the direction of each arrow.
+- Browser screens: the URL, visible state, table values, and form field contents.
+- Slides/documents: the full visible slide or section verbatim.
+- Chat panels: each sender name and message text.
+- Plain UI labels, menus, headings: plain text, not code blocks.
+
+If a screen stays the same across frames, transcribe it once in the first frame showing it. \
+If it changes, capture each distinct state.
 
 Return your analysis as JSON with this structure:
 {
   "summary": "Brief 1-sentence summary of what happens in this segment",
   "key_frames": [
-    {"filename": "frame_Xm00s.png", "description": "What this frame shows"}
+    {
+      "filename": "frame_Xm00s.png",
+      "description": "What this frame shows",
+      "extracted_text": "Everything readable in this frame, verbatim. Use ```lang blocks for code/commands/errors, with the file path as a first-line comment when known."
+    }
   ],
   "narrative": "2-3 sentence description correlating visuals with transcript"
 }
 
-Only include the most informative frames — skip frames that show the same thing."""
+Only include the most informative frames — skip frames that show the same thing. \
+Keep summary, description, and narrative short, but never shorten extracted_text."""
 
 OVERVIEW_PROMPT = """Based on the following segment analyses of a video, generate:
 1. A descriptive title for the video content
@@ -81,7 +110,7 @@ class ClaudeGuideProvider(GuideProvider):
 
         response = self.client.messages.create(
             model=self.model,
-            max_tokens=1024,
+            max_tokens=4096,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": content}],
         )
